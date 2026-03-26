@@ -1,0 +1,50 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html {
+  width: 100%;
+  overflow-x: clip;
+  -webkit-text-size-adjust: 100%;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  width: 100%;
+  min-width: 0;
+  font-family: 'DM Sans', sans-serif;
+  background: #fafaf7;
+  color: #1a1a1a;
+}
+
+#root {
+  width: 100%;
+  min-width: 0;
+}
+
+::selection {
+  background: rgba(224, 122, 47, 0.25);
+}
+
+:focus-visible {
+  outline: 2px solid rgba(224, 122, 47, 0.9);
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
