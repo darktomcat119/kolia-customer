@@ -1,5 +1,4 @@
 import type { ReactNode } from 'react';
-import logo from '../../../../website/public/logo.png';
 import { useCopy } from '../../lib/i18n';
 import { LanguageSwitcher } from '../common/LanguageSwitcher';
 
@@ -23,7 +22,11 @@ export function AuthShell({
         />
         <div className="absolute inset-0 bg-gradient-to-br from-black/60 via-secondary/65 to-primary/40" />
         <div className="absolute inset-0 p-8">
-          <img src={logo} alt="Kolia" className="h-12 w-auto rounded-xl bg-white/15 p-2 backdrop-blur" />
+          <img
+            src="/logo.png"
+            alt="Kolia"
+            className="h-12 w-auto rounded-xl bg-white/15 p-2 backdrop-blur"
+          />
           <div className="mt-10 max-w-sm">
             <h2 className="font-[family-name:var(--font-display)] text-4xl font-bold leading-tight">
               {copy.authAsideTitle}
@@ -42,7 +45,11 @@ export function AuthShell({
           />
           <div className="absolute inset-0 bg-gradient-to-br from-black/60 via-secondary/65 to-primary/40" />
           <div className="absolute inset-0 p-4">
-            <img src={logo} alt="Kolia" className="h-9 w-auto rounded-lg bg-white/15 p-1.5 backdrop-blur" />
+            <img
+              src="/logo.png"
+              alt="Kolia"
+              className="h-9 w-auto rounded-lg bg-white/15 p-1.5 backdrop-blur"
+            />
             <p className="mt-3 max-w-[92%] text-sm font-semibold leading-snug text-white/90">{copy.authAsideSubtitle}</p>
           </div>
         </div>
@@ -50,7 +57,7 @@ export function AuthShell({
         <div className="mx-auto w-full max-w-lg rounded-3xl border border-black/5 bg-surface p-6 shadow-card sm:p-8">
           <div className="mb-6 flex flex-wrap items-start justify-between gap-3">
             <div className="flex items-center">
-              <img src={logo} alt="Kolia" className="h-11 w-auto rounded-lg bg-black/[0.03] p-1" />
+              <img src="/logo.png" alt="Kolia" className="h-11 w-auto rounded-lg bg-black/[0.03] p-1" />
             </div>
             <LanguageSwitcher />
           </div>
