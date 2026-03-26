@@ -8,7 +8,6 @@ import { PopularDishesSlider } from '../components/home/PopularDishesSlider';
 import { ActiveOrderCard } from '../components/home/ActiveOrderCard';
 import { ReorderCard } from '../components/home/ReorderCard';
 import { HeroCanvas } from '../components/home/HeroCanvas';
-import logo from '../../../website/public/logo.png';
 import { useCopy, useI18n } from '../lib/i18n';
 import { labelCuisine } from '../lib/cuisineLabels';
 import { supabase } from '../lib/supabase';
@@ -187,7 +186,7 @@ export function Home() {
           <div className="absolute inset-0 z-10 flex min-h-0 w-full min-w-0 flex-col overflow-x-hidden overflow-y-auto overscroll-y-contain p-5 sm:p-10">
             <div className="flex min-w-0 items-center justify-between gap-4">
               <div className="inline-flex items-center gap-2 rounded-full bg-white/15 px-4 py-1.5 text-sm font-semibold text-white backdrop-blur">
-                <img src={logo} alt="Kolia" className="h-5 w-auto object-contain" />
+                <img src="/logo.png" alt="Kolia" className="h-5 w-auto object-contain" />
                 {landing.hero.badge}
               </div>
               <div className="hidden items-center gap-2 sm:flex">
