@@ -4,7 +4,6 @@ import { AnimatePresence, motion } from 'framer-motion';
 import { useAuth } from '../lib/auth';
 import { useCopy } from '../lib/i18n';
 import { LanguageSwitcher } from './common/LanguageSwitcher';
-import logo from '../../../website/public/logo.png';
 
 const linkBase =
   'inline-flex min-h-[44px] items-center gap-2 rounded-full px-4 py-2 text-sm font-semibold transition-colors';
@@ -25,7 +24,7 @@ export function Layout() {
           <div className="mx-auto w-full min-w-0 max-w-7xl px-4 py-3 sm:px-6">
             <div className="flex w-full min-w-0 flex-wrap items-center justify-between gap-3">
               <NavLink to="/" className="flex min-w-0 items-center">
-                <img src={logo} alt="Kolia" className="h-10 w-auto shrink-0 rounded-xl object-contain" />
+                <img src="/logo.png" alt="Kolia" className="h-10 w-auto shrink-0 rounded-xl object-contain" />
               </NavLink>
 
               <div className="flex shrink-0 items-center gap-2 sm:gap-3">
