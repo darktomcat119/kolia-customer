@@ -37,18 +37,7 @@ export function Home() {
     [defaultLanding, landingContent],
   );
 
-  const cuisines = useMemo(
-    () =>
-      [
-        { id: 'all' as const, label: copy.cuisineAll },
-        { id: 'west_african' as const, label: copy.cuisineWestAfrican },
-        { id: 'congolese' as const, label: copy.cuisineCongolese },
-        { id: 'north_african' as const, label: copy.cuisineNorthAfrican },
-        { id: 'lusophone_african' as const, label: copy.cuisineLusophone },
-        { id: 'pan_african' as const, label: copy.cuisinePanAfrican },
-      ] as const,
-    [copy],
-  );
+  const cuisines = useMemo(() => landing.sections.cuisineChips, [landing.sections.cuisineChips]);
 
   useEffect(() => {
     const id = window.setInterval(() => {

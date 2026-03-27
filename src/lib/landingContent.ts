@@ -1,5 +1,7 @@
 import type { Copy, Locale } from './i18nCopy';
 
+export type CuisineChip = { id: string; label: string };
+
 export type LandingContent = {
   hero: {
     badge: string;
@@ -9,6 +11,7 @@ export type LandingContent = {
     ctaTrack: string;
   };
   sections: {
+    cuisineChips: CuisineChip[];
     featuredTitle: string;
     featuredSubtitle: string;
     liveStatusTitle: string;
@@ -47,6 +50,16 @@ export function buildDefaultLandingContent(copy: Copy): LandingContent {
       ctaTrack: copy.ctaTrack,
     },
     sections: {
+      cuisineChips: [
+        { id: 'all', label: copy.cuisineAll },
+        { id: 'west_african', label: copy.cuisineWestAfrican },
+        { id: 'congolese', label: copy.cuisineCongolese },
+        { id: 'north_african', label: copy.cuisineNorthAfrican },
+        { id: 'central_african', label: copy.cuisineCentralAfrican },
+        { id: 'southern_african', label: copy.cuisineSouthernAfrican },
+        { id: 'lusophone_african', label: copy.cuisineLusophone },
+        { id: 'pan_african', label: copy.cuisinePanAfrican },
+      ],
       featuredTitle: copy.sectionFeatured,
       featuredSubtitle: copy.sectionFeaturedSubtitle,
       liveStatusTitle: copy.liveStatusTitle,
@@ -90,6 +103,12 @@ export function mergeLandingContent(base: LandingContent, incoming: unknown): La
       ctaTrack: c.hero?.ctaTrack ?? base.hero.ctaTrack,
     },
     sections: {
+      cuisineChips: Array.isArray(c.sections?.cuisineChips) && c.sections!.cuisineChips.length >= 1
+        ? c.sections!.cuisineChips.filter(
+            (chip): chip is CuisineChip =>
+              chip && typeof chip.id === 'string' && typeof chip.label === 'string',
+          )
+        : base.sections.cuisineChips,
       featuredTitle: c.sections?.featuredTitle ?? base.sections.featuredTitle,
       featuredSubtitle: c.sections?.featuredSubtitle ?? base.sections.featuredSubtitle,
       liveStatusTitle: c.sections?.liveStatusTitle ?? base.sections.liveStatusTitle,
@@ -118,4 +137,3 @@ export type LandingContentRow = {
   content: LandingContent;
   is_active: boolean;
 };
-
