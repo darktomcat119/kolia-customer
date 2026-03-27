@@ -12,37 +12,9 @@ import { useCopy, useI18n } from '../lib/i18n';
 import { labelCuisine } from '../lib/cuisineLabels';
 import { supabase } from '../lib/supabase';
 import type { Restaurant } from '../lib/types';
+import type { PopularDishSlide } from '../components/home/PopularDishesSlider';
 import { buildDefaultLandingContent, mergeLandingContent, type LandingContent } from '../lib/landingContent';
 
-const POPULAR = [
-  {
-    id: 'yassa',
-    name: 'Yassa Poulet',
-    restaurant: 'Chez Fatou',
-    price: 13.5,
-    image:
-      'https://images.unsplash.com/photo-1555939594-58d7cb561ad1?w=900&auto=format&fit=crop&q=70',
-    tagKey: 'popular' as const,
-  },
-  {
-    id: 'jollof',
-    name: 'Jollof Rice',
-    restaurant: 'Lagos Grill House',
-    price: 14.0,
-    image:
-      'https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=900&auto=format&fit=crop&q=70',
-    tagKey: 'chef' as const,
-  },
-  {
-    id: 'tagine',
-    name: 'Tagine Poulet Citron',
-    restaurant: 'Riad Essaouira',
-    price: 16.5,
-    image:
-      'https://images.unsplash.com/photo-1540189549336-e6e99c3679fe?w=900&auto=format&fit=crop&q=70',
-    tagKey: 'trending' as const,
-  },
-] as const;
 
 export function Home() {
   const copy = useCopy();
@@ -53,6 +25,7 @@ export function Home() {
   const [featuredLoading, setFeaturedLoading] = useState(true);
   const [featuredError, setFeaturedError] = useState('');
   const [featured, setFeatured] = useState<Restaurant[]>([]);
+  const [popularItems, setPopularItems] = useState<PopularDishSlide[]>([]);
   const [landingContent, setLandingContent] = useState<LandingContent | null>(null);
 
   const heroImgDuration = reduceMotion ? 0.25 : 1.1;
@@ -139,22 +112,32 @@ export function Home() {
     run();
   }, []);
 
+  useEffect(() => {
+    const run = async () => {
+      const { data } = await supabase
+        .from('menu_items')
+        .select('id, name, price, image_url, popular_rank, restaurants(name)')
+        .eq('is_popular', true)
+        .eq('is_available', true)
+        .order('popular_rank', { ascending: true, nullsFirst: false })
+        .limit(8);
+      if (!data) return;
+      setPopularItems(
+        data.map((row) => ({
+          id: row.id as string,
+          name: row.name as string,
+          restaurant: (row.restaurants as { name: string } | null)?.name ?? '',
+          price: Number(row.price),
+          image: (row.image_url as string | null) ?? '',
+        })),
+      );
+    };
+    void run();
+  }, []);
+
   const popularSlides = useMemo(
-    () =>
-      POPULAR.map((d) => ({
-        id: d.id,
-        name: d.name,
-        restaurant: d.restaurant,
-        price: d.price,
-        image: d.image,
-        tag:
-          d.tagKey === 'popular'
-            ? copy.tagPopular
-            : d.tagKey === 'chef'
-              ? copy.tagChefPick
-              : copy.tagTrending,
-      })),
-    [copy],
+    () => popularItems.filter((d) => d.image),
+    [popularItems],
   );
 
   return (
