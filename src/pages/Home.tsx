@@ -10,7 +10,7 @@ import { ReorderCard } from '../components/home/ReorderCard';
 import { HeroCanvas } from '../components/home/HeroCanvas';
 import { useCopy, useI18n } from '../lib/i18n';
 import { labelCuisine } from '../lib/cuisineLabels';
-import { supabase } from '../lib/supabase';
+import { api } from '../lib/api';
 import type { Restaurant } from '../lib/types';
 import type { PopularDishSlide } from '../components/home/PopularDishesSlider';
 import { buildDefaultLandingContent, mergeLandingContent, type LandingContent } from '../lib/landingContent';
@@ -63,14 +63,11 @@ export function Home() {
 
   useEffect(() => {
     const run = async () => {
-      const { data, error } = await supabase
-        .from('landing_page_content')
-        .select('content')
-        .eq('locale', locale)
-        .eq('is_active', true)
-        .maybeSingle();
-      if (!error) {
-        setLandingContent((data?.content as LandingContent | undefined) ?? null);
+      try {
+        const content = await api.get<LandingContent | null>(`/api/public/landing-content/${locale}`);
+        setLandingContent(content ?? null);
+      } catch {
+        // silently fall back to defaults
       }
     };
     void run();
@@ -81,16 +78,8 @@ export function Home() {
       setFeaturedLoading(true);
       setFeaturedError('');
       try {
-        const { data, error } = await supabase
-          .from('restaurants')
-          .select('*')
-          .eq('is_active', true)
-          .eq('featured', true)
-          .order('featured_rank')
-          .order('name')
-          .limit(4);
-        if (error) throw error;
-        setFeatured((data ?? []) as Restaurant[]);
+        const data = await api.get<Restaurant[]>('/api/public/restaurants/featured');
+        setFeatured(data ?? []);
       } catch (e) {
         setFeaturedError(e instanceof Error ? e.message : 'Failed to load featured restaurants');
         setFeatured([]);
@@ -103,23 +92,12 @@ export function Home() {
 
   useEffect(() => {
     const run = async () => {
-      const { data } = await supabase
-        .from('menu_items')
-        .select('id, name, price, image_url, popular_rank, restaurants(name)')
-        .eq('is_popular', true)
-        .eq('is_available', true)
-        .order('popular_rank', { ascending: true, nullsFirst: false })
-        .limit(8);
-      if (!data) return;
-      setPopularItems(
-        data.map((row) => ({
-          id: row.id as string,
-          name: row.name as string,
-          restaurant: (row.restaurants as { name: string } | null)?.name ?? '',
-          price: Number(row.price),
-          image: (row.image_url as string | null) ?? '',
-        })),
-      );
+      try {
+        const data = await api.get<PopularDishSlide[]>('/api/public/menu-items/popular');
+        setPopularItems(data ?? []);
+      } catch {
+        // silently leave empty
+      }
     };
     void run();
   }, []);
