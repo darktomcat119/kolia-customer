@@ -4,6 +4,7 @@ import { AnimatePresence, motion } from 'framer-motion';
 import { useAuth } from '../lib/auth';
 import { useCopy } from '../lib/i18n';
 import { LanguageSwitcher } from './common/LanguageSwitcher';
+import { useCart } from '../lib/cart';
 
 const linkBase =
   'inline-flex min-h-[44px] items-center gap-2 rounded-full px-4 py-2 text-sm font-semibold transition-colors';
@@ -12,6 +13,7 @@ export function Layout() {
   const location = useLocation();
   const { session, signOut } = useAuth();
   const copy = useCopy();
+  const { itemCount } = useCart();
   const hideNav =
     location.pathname === '/login' ||
     location.pathname === '/register' ||
@@ -52,7 +54,15 @@ export function Layout() {
                       `${linkBase} ${isActive ? 'bg-primary text-white' : 'text-text-secondary hover:bg-black/[0.03]'}`
                     }
                   >
-                    <ShoppingBag size={18} /> {copy.navCart}
+                    <span className="relative">
+                      <ShoppingBag size={18} />
+                      {itemCount > 0 && (
+                        <span className="absolute -right-2 -top-2 flex h-4 min-w-4 items-center justify-center rounded-full bg-secondary px-1 text-[10px] font-bold text-white leading-none">
+                          {itemCount > 99 ? '99+' : itemCount}
+                        </span>
+                      )}
+                    </span>
+                    {copy.navCart}
                   </NavLink>
                   <NavLink
                     to={session ? '/profile' : '/login'}
@@ -110,7 +120,14 @@ export function Layout() {
                 }
                 aria-label={copy.navCart}
               >
-                <ShoppingBag size={18} />
+                <span className="relative">
+                  <ShoppingBag size={18} />
+                  {itemCount > 0 && (
+                    <span className="absolute -right-2 -top-2 flex h-4 min-w-4 items-center justify-center rounded-full bg-secondary px-1 text-[10px] font-bold text-white leading-none">
+                      {itemCount > 99 ? '99+' : itemCount}
+                    </span>
+                  )}
+                </span>
               </NavLink>
               <NavLink
                 to={session ? '/profile' : '/login'}

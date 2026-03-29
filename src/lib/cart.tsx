@@ -4,11 +4,13 @@ import type { CartItem, MenuItem } from './types';
 type CartContextType = {
   items: CartItem[];
   restaurantId: string | null;
-  addItem: (restaurantId: string, item: MenuItem, quantity?: number) => void;
+  /** Returns false if the item is from a different restaurant (caller must confirm before clearing). */
+  addItem: (restaurantId: string, item: MenuItem, quantity?: number) => boolean;
   removeItem: (menuItemId: string) => void;
   setQuantity: (menuItemId: string, quantity: number) => void;
   clear: () => void;
   subtotal: number;
+  itemCount: number;
 };
 
 const CartContext = createContext<CartContextType | null>(null);
@@ -48,35 +50,37 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
     window.localStorage.setItem(STORAGE_KEY, JSON.stringify(payload));
   }, [restaurantId, items]);
 
-  const addItem = useCallback((rid: string, item: MenuItem, quantity = 1) => {
-    setRestaurantId((current) => {
-      if (current && current !== rid) {
-        // Switching restaurants clears cart by design (simpler UX).
-        setItems([]);
+  const addItem = useCallback(
+    (rid: string, item: MenuItem, quantity = 1): boolean => {
+      if (restaurantId && restaurantId !== rid) {
+        // Different restaurant — caller must confirm before clearing.
+        return false;
       }
-      return rid;
-    });
 
-    setItems((current) => {
-      const existing = current.find((i) => i.menu_item_id === item.id);
-      if (existing) {
-        return current.map((i) =>
-          i.menu_item_id === item.id ? { ...i, quantity: i.quantity + quantity } : i,
-        );
-      }
-      return [
-        ...current,
-        {
-          menu_item_id: item.id,
-          restaurant_id: rid,
-          name: item.name,
-          price: Number(item.price),
-          quantity,
-          image_url: item.image_url ?? null,
-        },
-      ];
-    });
-  }, []);
+      setRestaurantId(rid);
+      setItems((current) => {
+        const existing = current.find((i) => i.menu_item_id === item.id);
+        if (existing) {
+          return current.map((i) =>
+            i.menu_item_id === item.id ? { ...i, quantity: i.quantity + quantity } : i,
+          );
+        }
+        return [
+          ...current,
+          {
+            menu_item_id: item.id,
+            restaurant_id: rid,
+            name: item.name,
+            price: Number(item.price),
+            quantity,
+            image_url: item.image_url ?? null,
+          },
+        ];
+      });
+      return true;
+    },
+    [restaurantId],
+  );
 
   const removeItem = useCallback((menuItemId: string) => {
     setItems((current) => current.filter((i) => i.menu_item_id !== menuItemId));
@@ -99,9 +103,11 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
     [items],
   );
 
+  const itemCount = useMemo(() => items.reduce((sum, i) => sum + i.quantity, 0), [items]);
+
   const value = useMemo<CartContextType>(
-    () => ({ items, restaurantId, addItem, removeItem, setQuantity, clear, subtotal }),
-    [items, restaurantId, addItem, removeItem, setQuantity, clear, subtotal],
+    () => ({ items, restaurantId, addItem, removeItem, setQuantity, clear, subtotal, itemCount }),
+    [items, restaurantId, addItem, removeItem, setQuantity, clear, subtotal, itemCount],
   );
 
   return <CartContext.Provider value={value}>{children}</CartContext.Provider>;

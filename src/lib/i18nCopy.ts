@@ -113,6 +113,8 @@ export type Copy = {
   reorderSectionLabel: string;
   reorderFavoritesTitle: string;
   reorderFavoritesSubtitle: string;
+  addToFavorites: string;
+  removeFromFavorites: string;
   discountBadge: string;
   browseRestaurantsBtn: string;
   openCartBtn: string;
@@ -134,6 +136,10 @@ export type Copy = {
   restaurantNotFound: string;
   restaurantDefaultBlurb: string;
   cartSwitchWarning: string;
+  cartSwitchConfirmTitle: string;
+  cartSwitchConfirmBody: string;
+  cartSwitchConfirmOk: string;
+  cartSwitchConfirmCancel: string;
   goToCart: string;
   menuNotAvailable: string;
   addToCart: string;
@@ -322,6 +328,8 @@ export const COPY: Record<Locale, Copy> = {
     reorderSectionLabel: 'Reorder',
     reorderFavoritesTitle: 'Your favorites',
     reorderFavoritesSubtitle: 'One-tap reorder from your recent restaurants.',
+    addToFavorites: 'Save to favorites',
+    removeFromFavorites: 'Remove from favorites',
     discountBadge: '-10%',
     browseRestaurantsBtn: 'Browse restaurants',
     openCartBtn: 'Open cart',
@@ -343,6 +351,10 @@ export const COPY: Record<Locale, Copy> = {
     restaurantNotFound: 'Restaurant not found.',
     restaurantDefaultBlurb: 'Authentic flavors, premium experience.',
     cartSwitchWarning: 'Switching restaurants clears cart',
+    cartSwitchConfirmTitle: 'Start a new order?',
+    cartSwitchConfirmBody: 'Your current cart will be cleared. Do you want to continue?',
+    cartSwitchConfirmOk: 'Yes, clear cart',
+    cartSwitchConfirmCancel: 'Cancel',
     goToCart: 'Go to cart',
     menuNotAvailable: 'Menu not available yet.',
     addToCart: 'Add to cart',
@@ -506,6 +518,8 @@ export const COPY: Record<Locale, Copy> = {
     reorderSectionLabel: 'Recommander',
     reorderFavoritesTitle: 'Vos favoris',
     reorderFavoritesSubtitle: 'Recommandez en un geste depuis vos dernières adresses.',
+    addToFavorites: 'Ajouter aux favoris',
+    removeFromFavorites: 'Retirer des favoris',
     discountBadge: '-10 %',
     browseRestaurantsBtn: 'Parcourir les restaurants',
     openCartBtn: 'Ouvrir le panier',
@@ -527,6 +541,10 @@ export const COPY: Record<Locale, Copy> = {
     restaurantNotFound: 'Restaurant introuvable.',
     restaurantDefaultBlurb: 'Saveurs authentiques, expérience premium.',
     cartSwitchWarning: 'Changer de restaurant vide le panier',
+    cartSwitchConfirmTitle: 'Commencer une nouvelle commande ?',
+    cartSwitchConfirmBody: 'Votre panier actuel sera vidé. Voulez-vous continuer ?',
+    cartSwitchConfirmOk: 'Oui, vider le panier',
+    cartSwitchConfirmCancel: 'Annuler',
     goToCart: 'Voir le panier',
     menuNotAvailable: 'Menu pas encore disponible.',
     addToCart: 'Ajouter au panier',
@@ -691,6 +709,8 @@ export const COPY: Record<Locale, Copy> = {
     reorderSectionLabel: 'Pedir de novo',
     reorderFavoritesTitle: 'Os seus favoritos',
     reorderFavoritesSubtitle: 'Peça de novo com um toque dos restaurantes recentes.',
+    addToFavorites: 'Guardar nos favoritos',
+    removeFromFavorites: 'Remover dos favoritos',
     discountBadge: '-10%',
     browseRestaurantsBtn: 'Explorar restaurantes',
     openCartBtn: 'Abrir cesto',
@@ -712,6 +732,10 @@ export const COPY: Record<Locale, Copy> = {
     restaurantNotFound: 'Restaurante não encontrado.',
     restaurantDefaultBlurb: 'Sabores autênticos, experiência premium.',
     cartSwitchWarning: 'Mudar de restaurante esvazia o cesto',
+    cartSwitchConfirmTitle: 'Começar uma nova encomenda?',
+    cartSwitchConfirmBody: 'O seu cesto atual será esvaziado. Deseja continuar?',
+    cartSwitchConfirmOk: 'Sim, esvaziar o cesto',
+    cartSwitchConfirmCancel: 'Cancelar',
     goToCart: 'Ir ao cesto',
     menuNotAvailable: 'Menu ainda não disponível.',
     addToCart: 'Adicionar ao cesto',

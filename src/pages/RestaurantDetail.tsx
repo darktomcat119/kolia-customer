@@ -1,6 +1,8 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
+import { Heart } from 'lucide-react';
 import { supabase } from '../lib/supabase';
+import { api } from '../lib/api';
 import type { MenuCategory, MenuItem, Restaurant } from '../lib/types';
 import { useCart } from '../lib/cart';
 import { formatPrice } from '../lib/formatters';
@@ -13,12 +15,23 @@ export function RestaurantDetail() {
   const { id } = useParams();
   const navigate = useNavigate();
   const { session } = useAuth();
-  const { addItem, restaurantId } = useCart();
+  const { addItem, clear, restaurantId } = useCart();
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [restaurant, setRestaurant] = useState<Restaurant | null>(null);
   const [categories, setCategories] = useState<MenuCategory[]>([]);
   const [items, setItems] = useState<MenuItem[]>([]);
+  const [switchDialog, setSwitchDialog] = useState<{ item: MenuItem } | null>(null);
+  const pendingRestaurantRef = useRef<string | null>(null);
+  const [isFavorite, setIsFavorite] = useState(false);
+  const [favoriteLoading, setFavoriteLoading] = useState(false);
+
+  useEffect(() => {
+    if (!id || !session) return;
+    api.get<string[]>('/api/favorites').then((ids) => {
+      setIsFavorite(ids.includes(id));
+    }).catch(() => {/* ignore — user may not be logged in */});
+  }, [id, session]);
 
   useEffect(() => {
     const run = async () => {
@@ -129,6 +142,35 @@ export function RestaurantDetail() {
                 {copy.cartSwitchWarning}
               </div>
             ) : null}
+            {session && (
+              <button
+                type="button"
+                disabled={favoriteLoading}
+                aria-label={isFavorite ? copy.removeFromFavorites : copy.addToFavorites}
+                onClick={async () => {
+                  setFavoriteLoading(true);
+                  try {
+                    if (isFavorite) {
+                      await api.delete(`/api/favorites/${restaurant.id}`);
+                      setIsFavorite(false);
+                    } else {
+                      await api.post(`/api/favorites/${restaurant.id}`, {});
+                      setIsFavorite(true);
+                    }
+                  } catch {
+                    // ignore
+                  } finally {
+                    setFavoriteLoading(false);
+                  }
+                }}
+                className="inline-flex min-h-[44px] items-center justify-center rounded-full border border-black/10 px-4 py-2.5 text-sm transition-colors hover:bg-black/[0.03] disabled:opacity-50"
+              >
+                <Heart
+                  size={18}
+                  className={isFavorite ? 'fill-primary text-primary' : 'text-text-secondary'}
+                />
+              </button>
+            )}
             <Link
               to="/cart"
               className="inline-flex min-h-[44px] items-center justify-center rounded-full bg-primary px-6 py-2.5 text-sm font-semibold text-white hover:bg-primary-dark"
@@ -184,7 +226,11 @@ export function RestaurantDetail() {
                               navigate('/login');
                               return;
                             }
-                            addItem(restaurant.id, item, 1);
+                            const ok = addItem(restaurant.id, item, 1);
+                            if (!ok) {
+                              pendingRestaurantRef.current = restaurant.id;
+                              setSwitchDialog({ item });
+                            }
                           }}
                           className="mt-4 inline-flex min-h-[44px] w-full items-center justify-center rounded-full bg-black/[0.04] px-5 text-sm font-semibold text-text-primary hover:bg-black/[0.06]"
                         >
@@ -201,6 +247,41 @@ export function RestaurantDetail() {
       ) : (
         <div className="rounded-3xl border border-black/5 bg-surface p-6 text-sm text-text-secondary">
           {copy.menuNotAvailable}
+        </div>
+      )}
+
+      {switchDialog && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 px-4">
+          <div className="w-full max-w-sm rounded-3xl bg-white p-6 shadow-2xl">
+            <h3 className="font-[family-name:var(--font-display)] text-xl font-bold text-text-primary">
+              {copy.cartSwitchConfirmTitle}
+            </h3>
+            <p className="mt-2 text-sm text-text-secondary">{copy.cartSwitchConfirmBody}</p>
+            <div className="mt-6 flex gap-3">
+              <button
+                type="button"
+                onClick={() => setSwitchDialog(null)}
+                className="flex-1 rounded-full border border-black/10 py-2.5 text-sm font-semibold text-text-secondary hover:bg-black/[0.03]"
+              >
+                {copy.cartSwitchConfirmCancel}
+              </button>
+              <button
+                type="button"
+                onClick={() => {
+                  const rid = pendingRestaurantRef.current;
+                  const { item } = switchDialog;
+                  setSwitchDialog(null);
+                  if (rid) {
+                    clear();
+                    addItem(rid, item, 1);
+                  }
+                }}
+                className="flex-1 rounded-full bg-primary py-2.5 text-sm font-semibold text-white hover:bg-primary-dark"
+              >
+                {copy.cartSwitchConfirmOk}
+              </button>
+            </div>
+          </div>
         </div>
       )}
     </div>
