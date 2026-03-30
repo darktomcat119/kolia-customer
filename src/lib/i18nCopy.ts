@@ -148,6 +148,14 @@ export type Copy = {
   profileSubtitle: string;
   profileSignedInAs: string;
   profileViewOrders: string;
+  profileLogout: string;
+  profileSwitchAccount: string;
+  profileDeleteAccount: string;
+  profileDeleteConfirmTitle: string;
+  profileDeleteConfirmBody: string;
+  profileDeleteConfirmOk: string;
+  profileDeleteConfirmCancel: string;
+  profileDeleting: string;
   authAsideTitle: string;
   authAsideSubtitle: string;
   authConfirmInvalidTitle: string;
@@ -363,6 +371,14 @@ export const COPY: Record<Locale, Copy> = {
     profileSubtitle: 'Manage your account and track orders.',
     profileSignedInAs: 'Signed in as',
     profileViewOrders: 'View orders',
+    profileLogout: 'Log out',
+    profileSwitchAccount: 'Switch account',
+    profileDeleteAccount: 'Delete my account',
+    profileDeleteConfirmTitle: 'Delete your account?',
+    profileDeleteConfirmBody: 'This action is permanent. All your data, orders and favorites will be deleted and cannot be recovered.',
+    profileDeleteConfirmOk: 'Yes, delete my account',
+    profileDeleteConfirmCancel: 'Cancel',
+    profileDeleting: 'Deleting...',
     authAsideTitle: 'Taste Africa in a premium way',
     authAsideSubtitle:
       'Curated restaurants, smooth checkout, and real-time tracking from kitchen to doorstep.',
@@ -553,6 +569,14 @@ export const COPY: Record<Locale, Copy> = {
     profileSubtitle: 'Gérez votre compte et suivez vos commandes.',
     profileSignedInAs: 'Connecté en tant que',
     profileViewOrders: 'Voir les commandes',
+    profileLogout: 'Se déconnecter',
+    profileSwitchAccount: 'Changer de compte',
+    profileDeleteAccount: 'Supprimer mon compte',
+    profileDeleteConfirmTitle: 'Supprimer votre compte ?',
+    profileDeleteConfirmBody: 'Cette action est définitive. Toutes vos données, commandes et favoris seront supprimés sans possibilité de récupération.',
+    profileDeleteConfirmOk: 'Oui, supprimer mon compte',
+    profileDeleteConfirmCancel: 'Annuler',
+    profileDeleting: 'Suppression...',
     authAsideTitle: 'Découvrez l’Afrique en version premium',
     authAsideSubtitle:
       'Restaurants sélectionnés, paiement fluide et suivi en temps réel jusqu’à chez vous.',
@@ -744,6 +768,14 @@ export const COPY: Record<Locale, Copy> = {
     profileSubtitle: 'Gerir a sua conta e acompanhar pedidos.',
     profileSignedInAs: 'Sessão iniciada como',
     profileViewOrders: 'Ver pedidos',
+    profileLogout: 'Terminar sessão',
+    profileSwitchAccount: 'Trocar de conta',
+    profileDeleteAccount: 'Eliminar a minha conta',
+    profileDeleteConfirmTitle: 'Eliminar a sua conta?',
+    profileDeleteConfirmBody: 'Esta ação é permanente. Todos os seus dados, pedidos e favoritos serão eliminados sem possibilidade de recuperação.',
+    profileDeleteConfirmOk: 'Sim, eliminar a minha conta',
+    profileDeleteConfirmCancel: 'Cancelar',
+    profileDeleting: 'A eliminar...',
     authAsideTitle: 'Prove África ao estilo premium',
     authAsideSubtitle:
       'Restaurantes selecionados, checkout suave e rastreio até à sua porta.',
